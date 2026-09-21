@@ -1,0 +1,88 @@
+DOCKER LEARNING - BEGINNER TO ADVANCED
+Using only: Dockerfile + main.py in this folder
+Goal: architecture for advanced discord bot (AI agent, pytorch, XP, DB, minigames)
+
+=== 1. SETUP ===
+sudo systemctl start docker
+sudo systemctl enable docker  # auto-start on reboot
+docker info                   # must show Server: section
+sudo usermod -aG docker $USER # no sudo every time
+newgrp docker                 # apply now
+
+=== 2. CORE IDEAS ===
+Dockerfile = recipe (this folder: FROM/WORKDIR/COPY/CMD)
+Image = frozen blueprint built from Dockerfile. Read-only.
+Container = 1 live run of an image. Disposable.
+DockerHub = GitHub for images. FROM pulls from there.
+
+=== 3. YOUR DOCKERFILE ===
+FROM python:3.12-slim  # base, line 1. Get Python without installing.
+WORKDIR /app            # work folder inside image
+COPY main.py .          # host -> image. main.py gets inside.
+CMD ["python","main.py"]# runs on docker run, not on build. One per file.
+
+=== 4. BUILD + RUN ===
+docker build -t hello-bot .   # make image from Dockerfile here. -t = name
+docker images                 # list images
+docker run --rm hello-bot     # create+start container, auto-delete after
+docker run --name test hello-bot  # keep stopped container as test
+docker run --rm -e NAME=Jonat hello-bot  # config without rebuild
+
+main.py os.getenv("NAME") reads -e. Same image, dev/prod config.
+Future: -e DISCORD_TOKEN=xxx, never hardcode.
+
+=== 5. MANAGE ===
+docker ps       # running only
+docker ps -a    # + stopped
+docker logs test       # see prints after exit
+docker start test      # run again
+docker stop test       # stop running
+docker rm test         # delete stopped
+docker rmi hello-bot   # delete image
+
+Your main.py exits (Exited 0) after count 1-3. Discord bot stays Up.
+
+=== 6. CREATE VS START ===
+docker create --name c1 hello-bot  # create only
+docker start c1                    # start later
+docker run = create + start in one.
+docker run -d --name bot hello-bot # detached background
+
+=== 7. LAYERS + CACHE ===
+Each Dockerfile line = layer. See with: docker history hello-bot
+Rebuild reuses cache (Using cache) if unchanged.
+Rule: slow first, fast last.
+  COPY requirements.txt .
+  RUN pip install -r requirements.txt  # cached
+  COPY . .  # changes often, only this rebuilds
+Wrong order = reinstall torch on every edit.
+
+=== 8. VS CODE VS DOCKER ===
+python main.py = host python, host files.
+docker run = isolated python from FROM, isolated files from COPY.
+Ship image = no reinstall elsewhere. Still need -e secrets, volumes data, ports.
+
+=== 9. DATA, PORTS, NETWORK (for XP/DB) ===
+Containers disposable, volumes keep data:
+  docker run -v pgdata:/var/lib/postgresql/data postgres:16
+Ports: -p HOST:CONTAINER, e.g. -p 5432:5432
+Network: containers talk by name on same network.
+
+=== 10. MULTI-SERVICE (your bot architecture) ===
+Don't put bot+db+model in one image. One service per container.
+docker-compose.yml:
+  services:
+    bot: build ., depends_on: [db], env_file: .env
+    db: image postgres:16, volumes: [pgdata:/var/lib/postgresql/data]
+
+=== 11. SHIP TO CLOUD (GCP) ===
+docker build -t hello-bot .
+docker push myname/hello-bot  # to Artifact Registry / Hub
+Cloud pulls + runs same image. Use GCE/GKE for always-on bot, not one-off run.
+
+=== ORDER TO PRACTICE ===
+1. build, run, run -e, ps -a, logs, rm
+2. edit main.py print, rebuild, see cache miss
+3. add requirements.txt + RUN pip install, rebuild twice
+4. compose with postgres, add volume
+5. push/pull
