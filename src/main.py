@@ -2,7 +2,6 @@
 import sys
 import asyncio
 
-
 class RuntimeReport:
     """Immutable holder for what we discovered about the runtime."""
 
