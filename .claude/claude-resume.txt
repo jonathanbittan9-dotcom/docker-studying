@@ -1,0 +1,24 @@
+How to go back to a Claude Code session
+=======================================
+
+From your shell (starting Claude)
+---------------------------------
+claude --continue      (or: claude -c)
+    Reopens the most recent conversation in the current directory.
+
+claude --resume        (or: claude -r)
+    Opens a list of past sessions so you can pick one.
+
+claude -r <session-id>
+    Reopens a specific session by its ID.
+
+From inside a running session
+-----------------------------
+/resume
+    Opens the same list and switches to the session you pick.
+
+Note
+----
+Sessions are saved per project directory. Run these from the folder you
+were working in (e.g. ~/workspace/docker-studying), or that session won't
+be in the list.
