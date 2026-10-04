@@ -3,7 +3,7 @@ from src.logs_setup import log
 
 def main() -> None:
     log.info(f"[boot]: message from python] {sys.version.split()[0]} version")
-    log.info("[boot] hello from my own dockerfile")
+    log.info("[boot] hello from my own dockerfile!")
 
 def check_discord() -> None:
     try:
