@@ -32,3 +32,4 @@ if "__main__" == __name__:
     main()
     check_discord()
     check_token()
+    run_forever()
