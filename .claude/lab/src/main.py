@@ -9,7 +9,7 @@ def main() -> None:
 def check_token() -> None:
     token = os.getenv("DISCORD_TOKEN")
     if token is None:
-        log.exception("[boot]DISCORD TOKEN IS MISSING")
+        log.exception("[boot] DISCORD TOKEN IS MISSING")
         sys.exit(1)
     else:
         log.info("[boot] found the DISCORD BOT TOKEN ")
@@ -24,3 +24,4 @@ def check_discord() -> None:
 if "__main__" == __name__:
     main()
     check_discord()
+    check_token()
