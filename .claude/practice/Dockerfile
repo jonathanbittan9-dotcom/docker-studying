@@ -1,6 +1,6 @@
 FROM python:3.14-slim
 WORKDIR /lapis 
-COPY ..
+COPY . .
 RUN pip install discord.py
 RUN pip install deepagents
 RUN pip install pandas
