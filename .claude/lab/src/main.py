@@ -2,6 +2,9 @@ import sys
 import os
 from src.logs_setup import log
 import time
+import signal
+
+
 
 def main() -> None:
     log.info(f"[boot]: message from python] {sys.version.split()[0]} version")
@@ -22,14 +25,27 @@ def check_discord() -> None:
         log.exception(f"[boot] ERROR: discord.py is not INSTALLED")
         log.exception(sys.exit(1))
 
+running = True
+
 def run_forever() -> None:
     beat = 0
-    while True:
+    while running:
         beat+=1
         log.info(f"heartbeat {beat}")
         time.sleep(5)
+    log.info("saved everything")
+
+def handle_stop(signum, frame) -> None:
+    global running
+    log.info("[bot] got SIGTERM , fishing current work..")
+    running = False
+
+signal.signal(signal.SIGTERM , handle_stop)
+
+
 if "__main__" == __name__:
     main()
     check_discord()
     check_token()
     run_forever()
+
