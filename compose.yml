@@ -1,4 +1,10 @@
 services:
+  bot:
+    image: ghcr.io/jonathanbittan9-dotcom/docker-studying:latest
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN:?set DISCORD_TOKEN in .env}
+    restart: unless-stopped
+
   db:
     image: postgres:17
     environment:
