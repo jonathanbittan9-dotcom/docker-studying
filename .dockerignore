@@ -7,3 +7,4 @@ __pycache__/
 docker-learning.txt
 bot.py
 main.py
+.dockerignore

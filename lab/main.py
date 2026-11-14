@@ -1,6 +1,6 @@
 import sys
 import os
-from src.logs_setup import log
+from lab.logs_setup import log
 import time
 import signal
 
