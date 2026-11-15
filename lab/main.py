@@ -56,6 +56,7 @@ def test():
     """idk"""
     """sup"""
     """hi!"""
+    """yo!"""
 if "__main__" == __name__:
     main()
     check_discord()
