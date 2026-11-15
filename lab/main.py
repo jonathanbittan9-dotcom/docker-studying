@@ -3,7 +3,7 @@ import os
 from lab.logs_setup import log
 import time
 import signal
-
+import psycopg
 
 
 def main() -> None:
@@ -42,10 +42,25 @@ def handle_stop(signum, frame) -> None:
 
 signal.signal(signal.SIGTERM , handle_stop)
 
+def check_db():
+    url = os.getenv("DATABASE_URL")
+    try:
+        with psycopg.connect(url) as conn:
+            version  = conn.execute("SELECT version()").fetchone()[0]
+            log.info(f"[boot] connected to DB: {version.split(',')[0]}")
+    except Exception:
+        log.exception("[boot] FAILED TO CONNECT TO THE DB")
+        sys.exit(1)
 
+def test():
+    """idk"""
+    """sup"""
+    """hi!"""
+    """yo!"""
 if "__main__" == __name__:
     main()
     check_discord()
     check_token()
+    check_db()
     run_forever()
 
