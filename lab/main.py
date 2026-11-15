@@ -52,11 +52,7 @@ def check_db():
         log.exception("[boot] FAILED TO CONNECT TO THE DB")
         sys.exit(1)
 
-def test():
-    """idk"""
-    """sup"""
-    """hi!"""
-    """yo!"""
+
 if "__main__" == __name__:
     main()
     check_discord()
