@@ -46,7 +46,7 @@ def check_db():
     url = os.getenv("DATABASE_URL")
     try:
         with psycopg.connect(url) as conn:
-            version  = conn.execute("SELECT version()").fetchcone()[0]
+            version  = conn.execute("SELECT version()").fetchone()[0]
             log.info(f"[boot] connected to DB: {version.split(',')[0]}")
     except Exception:
         log.exception("[boot] FAILED TO CONNECT TO THE DB")
