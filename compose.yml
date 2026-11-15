@@ -3,6 +3,9 @@ services:
     image: ghcr.io/jonathanbittan9-dotcom/docker-studying:latest
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN:?set DISCORD_TOKEN in .env}
+      DATABASE_URL:  postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/botdb
+    depends_on:
+      - db
     restart: unless-stopped
 
   db:
@@ -13,7 +16,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "127.0.0.1:5433:5432"
+      - "127.0.0.1:5434:5432"
 
 volumes:
   pgdata:
