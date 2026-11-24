@@ -6,7 +6,8 @@ services:
       DISCORD_TOKEN: ${DISCORD_TOKEN:?set DISCORD_TOKEN in .env}
       DATABASE_URL:  postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/botdb
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     restart: unless-stopped
 
   db:
@@ -18,6 +19,12 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "127.0.0.1:5434:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL" , "pg_isready -U postgres -d botdb"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
 volumes:
   pgdata:
